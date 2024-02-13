@@ -1,0 +1,162 @@
+Conceptual Model:
+Entity Sets:
+Purchase Order
+Quality
+Receiving Status
+Vendor List
+Incoming Inventory Control
+Production
+Shipping
+Analyzer Part List
+Cartridge Part List
+Part
+Employee
+
+Attributes and Functional Dependencies:
+Purchase order table
+PO # --> Date, Vendor ID,Item #,PO Issue Date,Quantity Ordered,Price per part,Total Price of Parts,Total PO Price
+
+Quality table
+Quality_ID--> Date,Emp_ID,Item #,Quantity Passed Inspection,Quantity Issued to Material Review Board
+
+Receiving Status table
+Receiving Status ID--> Receiving Status,Description
+
+Vendor List table
+Vendor ID --> Vendor Name, Vendor Part Number,Description, Item #
+
+Incoming Inventory Control table
+Incoming ID--> Emp_ID,Receipt Date,Purchase Order Number,Vendor ID,Lot Number,Expiration Date,Total Item Quantity Received, Receiving Status ID
+
+Production table
+Work Order #--> Open Work Order Date,Closed Work Order Date,Name,Description,Item #,Quantity Being Built,Status
+
+Shipping table
+shipping ID --> Date,First Name, Last Name,Customer ,Sales Order #,	Packing List #,Item #,Quantity Shipped
+
+Analyzer Part List table
+Item #--> Vendor Part #,Description,Vendor	Location,Unit of Measure,Available Quantity,Total Inventory,Quantity Waiting Inspection,Quantity On Receiving Hold, Quantity on Production Hold,Quantity On Order,MRB Quantity, RMA Quantity,Scrapped Quantity,	R&D Issued Quantity
+
+Cartridge Part List table
+Item #-->Description,Total Inventory,Quantity Waiting Inspection,Quantity On Receiving Hold,Quantity on Production Quality Hold,Quantity On Order,MRB Quantity,RMA Quantity,Scrapped Quantity,R&D Issued Quantity  
+
+Part table
+part_id --> Material description,Item #
+
+Employee Table
+Emp_ID --> First Name, Last Name
+
+Normalization:
+
+1NF -- Every value is atomic(indivisible),Ensuring all attributes are atomic and no repeating groups exist.
+    Split all the names into first name and last name
+
+2NF -- No Partial dependenncies,Eliminating partial dependencies to achieve Second Normal Form (2NF).
+    When a non-determinant depends on only part of the primary key
+
+3NF -- Split transitive dependencies into separate entity sets and add relationships between the original entity set and the new ones.
+    Eliminating transitive dependencies to achieve Third Normal Form (3NF).
+
+Relationships:
+
+Purchase Order (PO) - Vendor List
+Connectivity: One-to-Many (One PO can have one Vendor, but a Vendor can have multiple POs)
+Participation: Mandatory on both sides (Each PO must have a corresponding Vendor, and each Vendor must have at least one associated PO)
+
+Quality - Employee
+Connectivity: Many-to-One (Many quality checks can be performed by one employee)
+Participation: Mandatory on the Quality side, optional on the Employee side (Each quality check must be associated with an employee, but not all employees may be involved in quality checks)
+
+Incoming Inventory Control (Incoming) - Receiving Status
+Connectivity: One-to-One (Each incoming inventory control has one receiving status, and each receiving status is associated with one incoming inventory control)
+Participation: Mandatory on the Incoming side, mandatory on the Receiving Status side (Each incoming inventory control must have a receiving status, and each receiving status must be associated with an incoming inventory control)
+
+Incoming Inventory Control (Incoming) - Vendor List
+Connectivity: Many-to-One (Many incoming inventory controls can be associated with one vendor)
+Participation: Mandatory on the Incoming side, mandatory on the Vendor List side (Each incoming inventory control must have a vendor, and each vendor must have at least one associated incoming inventory control)
+
+Production - Employee
+Connectivity: Many-to-One (Many production records can be associated with one employee)
+Participation: Mandatory on the Production side, optional on the Employee side (Each production record must be associated with an employee, but not all employees may be involved in production)
+
+Shipping - Employee
+Connectivity: Many-to-One (Many shipping records can be associated with one employee)
+Participation: Mandatory on the Shipping side, optional on the Employee side (Each shipping record must be associated with an employee, but not all employees may be involved in shipping)
+
+Analyzer Part List - Vendor List
+Connectivity: Many-to-One (Many parts in the analyzer part list can be associated with one vendor)
+Participation: Mandatory on the Analyzer Part List side, mandatory on the Vendor List side (Each part in the analyzer part list must have a vendor, and each vendor must have at least one associated part)
+
+Cartridge Part List - Vendor List
+Connectivity: Many-to-One (Many parts in the cartridge part list can be associated with one vendor)
+Participation: Mandatory on the Cartridge Part List side, mandatory on the Vendor List side (Each part in the cartridge part list must have a vendor, and each vendor must have at least one associated part)
+
+Analyzer Part List - Part
+Connectivity: One-to-One (Each part in the analyzer part list is associated with one part entity)
+Participation: Mandatory on the Analyzer Part List side, masndatory on the Part side (Each part in the analyzer part list must have corresponding details in the part entity, and each part entity must be associated with a part in the analyzer part list)
+
+Cartridge Part List - Part
+Connectivity: One-to-One (Each part in the cartridge part list is associated with one part entity)
+Participation: Mandatory on the Cartridge Part List side, mandatory on the Part side (Each part in the cartridge part list must have corresponding details in the part entity, and each part entity must be associated with a part in the cartridge part list)
+
+ERD for Logical Model:
+
+
+
+Describe the steps you took to complete the physical model:
+After saving the logical model we can press Ctrl+G to generate physical model. 
+We name our physical model and then select the target database engine, Here we are selecting MySql 8.x
+click generate physical model. 
+A new tab will open with the workbook physical model.
+
+ERD for Physical Model:
+
+Show the sql commands that build the database.
+
+mysql -h localhost -u root -p
+create database medical_device_startup;
+use medical_device_startup;
+source Medical_Device_DB_Physical_Export_create.sql
+
+
+Screen shots that prove that we built the database and its structures in mysql:
+
+
+
+Description: You built the database in section F, and it now exists in mysql. Now populate it with your data. Take your original data source or sources and generate insert statements from them. Store the insert statements in a text file, and then use the mysql source command to run these insert statements to populate the various table structures. Generating the necessary insert statements may require writing Python scripts or manipulating Excel databases to convert the data from your original data sources.
+Rubric: Your work will be grades as follows:
+
+Explain step-by-step and very clearly how you created the required SQL statements from your initial data. Write it as a set of instructions.
+First updated the excel sheet with the pseudo data. 
+Describe all the table and got the column name and then created the insert statements manually. 
+
+Show the file of insert statements that you ran in MySQL. 
+Insert.sql in github
+Show screenshots of the data in your MySQL database. 
+
+
+-- Insert
+INSERT INTO Employee VALUES ('1001','Brosina','Hoffman');
+INSERT INTO Quality VALUES ('1001','2024-12-02','1001','PN-0001','100','0','1001');
+INSERT INTO Vendor_List VALUES ('1001','Abcad','VP-0001','Hex Nuts','PN-0001');
+INSERT INTO Shipping VALUES ('1001','2024-12-02','Mary','Kay','NMSU','SO-0001','PA-0001','PN-0001','1000','1001');
+INSERT INTO Incoming_Inventory_Control VALUES ('1001','1001','2024-12-02','PO-0001','VI-00001','33671','2030-12-02','0445','001','1001');
+INSERT INTO Analyzer_Part_List VALUES ('PN-00200','VP-111141','Shoulder Screw, #4-40, 1/8” x 1-1/2” Shoulder, 18-8 SS','USA','Each',4542,7120,0,0,0,0,0,0,0,0,'1001');
+INSERT INTO Cartridge_Part_List VALUES ('PN-00500','Top Shroud, PMOS Cartridge','71250','0','0','0','0','0','0','0','0','1001');
+INSERT INTO Part_Quantity VALUES ('PN-00001','Bumper','AS-00006','PN-00200','PN-00500');
+INSERT INTO Production VALUES ('WO-0001','2024-12-02','02/30/2024','New Order','From New Company','PN-00012','100','Building','1001');
+INSERT INTO Purchase_Order VALUES ('PO-0001','2024-12-02','VI-0001','PN-0001','02/01/2024','454','10.00','4540.00','4540.00','1001');
+INSERT INTO Receiving_Status VALUES ('1001','WIP','Work In Progress', '1001');
+-- End of file.
+
+SELECT * FROM analyzer_part_list;
+SELECT * FROM cartridge_part_list;
+SELECT * FROM employee;
+SELECT * FROM incoming_inventory_control;
+SELECT * FROM part_quantity;
+SELECT * FROM production;
+SELECT * FROM purchase_order;
+SELECT * FROM quality;
+SELECT * FROM receiving_status;
+SELECT * FROM shipping;
+SELECT * FROM vendor_list;
